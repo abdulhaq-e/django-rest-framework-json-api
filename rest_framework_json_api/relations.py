@@ -115,7 +115,7 @@ class ResourceRelatedField(PrimaryKeyRelatedField):
         return return_data
 
     def to_internal_value(self, data):
-        if isinstance(data, six.text_type):
+        if isinstance(data, str):
             try:
                 data = json.loads(data)
             except ValueError:

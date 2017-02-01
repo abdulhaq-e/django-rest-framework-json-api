@@ -1,0 +1,17 @@
+machine:
+  python:
+    version: 3.6.0
+
+
+machine:
+  post:
+    - pyenv global 3.5.2 3.6.0
+        
+dependencies:
+  override:
+    - pip install -r requirements-development.txt
+    - pyenv local 3.5.2 3.6.0
+    
+test:
+  override:
+    - tox

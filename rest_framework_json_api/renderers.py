@@ -6,7 +6,6 @@ from collections import OrderedDict
 
 import inflection
 from django.db.models import Manager, QuerySet
-from django.utils import six, encoding
 from rest_framework import relations
 from rest_framework import renderers
 from rest_framework.serializers import BaseSerializer, Serializer, ListSerializer
@@ -41,7 +40,7 @@ class JSONRenderer(renderers.JSONRenderer):
     @classmethod
     def extract_attributes(cls, fields, resource):
         data = OrderedDict()
-        for field_name, field in six.iteritems(fields):
+        for field_name, field in fields.items():
             # ID is always provided in the root of JSON API so remove it from attributes
             if field_name == 'id':
                 continue
@@ -78,7 +77,7 @@ class JSONRenderer(renderers.JSONRenderer):
         if resource_instance is None:
             return
 
-        for field_name, field in six.iteritems(fields):
+        for field_name, field in fields.items():
             # Skip URL field
             if field_name == api_settings.URL_FIELD_NAME:
                 continue
@@ -103,7 +102,7 @@ class JSONRenderer(renderers.JSONRenderer):
 
                 for related_object in relation_queryset:
                     relation_data.append(
-                        OrderedDict([('type', relation_type), ('id', encoding.force_text(related_object.pk))])
+                        OrderedDict([('type', relation_type), ('id', str(related_object.pk))])
                     )
 
                 data.update({field_name: {
@@ -141,7 +140,7 @@ class JSONRenderer(renderers.JSONRenderer):
                 relation_id = relation if resource.get(field_name) else None
                 relation_data = {
                     'data': (
-                        OrderedDict([('type', relation_type), ('id', encoding.force_text(relation_id))])
+                        OrderedDict([('type', relation_type), ('id', str(relation_id))])
                         if relation_id is not None else None)
                 }
 
@@ -187,7 +186,7 @@ class JSONRenderer(renderers.JSONRenderer):
 
                     relation_data.append(OrderedDict([
                         ('type', nested_resource_instance_type),
-                        ('id', encoding.force_text(nested_resource_instance.pk))
+                        ('id', nested_resource_instance.pk)
                     ]))
                 data.update({
                     field_name: {
@@ -218,7 +217,7 @@ class JSONRenderer(renderers.JSONRenderer):
 
                         relation_data.append(OrderedDict([
                             ('type', nested_resource_instance_type),
-                            ('id', encoding.force_text(nested_resource_instance.pk))
+                            ('id', nested_resource_instance.pk)
                         ]))
 
                     data.update({field_name: {'data': relation_data}})
@@ -234,7 +233,7 @@ class JSONRenderer(renderers.JSONRenderer):
                         'data': (
                             OrderedDict([
                                 ('type', relation_type),
-                                ('id', encoding.force_text(relation_instance.pk))
+                                ('id', relation_instance.pk)
                             ]) if resource.get(field_name) else None)
                     }
                 })
@@ -255,7 +254,7 @@ class JSONRenderer(renderers.JSONRenderer):
         included_resources = copy.copy(included_resources)
         included_resources = [inflection.underscore(value) for value in included_resources]
 
-        for field_name, field in six.iteritems(fields):
+        for field_name, field in fields.items():
             # Skip URL field
             if field_name == api_settings.URL_FIELD_NAME:
                 continue
@@ -384,8 +383,8 @@ class JSONRenderer(renderers.JSONRenderer):
     def build_json_resource_obj(cls, fields, resource, resource_instance, resource_name):
         resource_data = [
             ('type', resource_name),
-            ('id', encoding.force_text(resource_instance.pk) if resource_instance else None),
-            ('attributes', cls.extract_attributes(fields, resource)),
+            ('id', resource_instance.pk if resource_instance else None),
+            ('attributes', JSONRenderer.extract_attributes(fields, resource)),
         ]
         relationships = cls.extract_relationships(fields, resource, resource_instance)
         if relationships:

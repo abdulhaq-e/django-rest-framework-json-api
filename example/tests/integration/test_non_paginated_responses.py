@@ -6,7 +6,7 @@ import pytest
 from example.views import EntryViewSet
 from rest_framework_json_api.pagination import PageNumberPagination
 
-from example.tests.utils import dump_json, redump_json
+from example.tests.utils import load_json
 
 pytestmark = pytest.mark.django_db
 
@@ -43,11 +43,7 @@ def test_multiple_entries_no_pagination(multiple_entries, rf):
                         "data": [{"type": "comments", "id": "1"}]
                     },
                     "suggested": {
-                        "data": [{"type": "entries", "id": "2"}],
-                        "links": {
-                            "related": "http://testserver/entries/1/suggested/",
-                            "self": "http://testserver/entries/1/relationships/suggested"
-                        }
+                        "data": [{"type": "entries", "id": "2"}]
                     }
                 }
             },
@@ -78,11 +74,7 @@ def test_multiple_entries_no_pagination(multiple_entries, rf):
                         "data": [{"type": "comments", "id": "2"}]
                     },
                     "suggested": {
-                        "data": [{"type": "entries", "id": "1"}],
-                        "links": {
-                            "related": "http://testserver/entries/2/suggested/",
-                            "self": "http://testserver/entries/2/relationships/suggested"
-                        }
+                        "data": [{"type": "entries", "id": "1"}]
                     }
                 }
             },
@@ -101,7 +93,6 @@ def test_multiple_entries_no_pagination(multiple_entries, rf):
     response = view(request)
     response.render()
 
-    content_dump = redump_json(response.content)
-    expected_dump = dump_json(expected)
+    parsed_content = load_json(response.content)
 
-    assert content_dump == expected_dump
+    assert expected == parsed_content

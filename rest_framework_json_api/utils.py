@@ -15,7 +15,7 @@ import django
 from django.conf import settings
 from django.db.models import Manager
 from django.http import QueryDict
-from django.utils import encoding, six
+from django.utils import encoding
 from django.utils.module_loading import import_string as import_class_from_dotted_path
 from django.utils.translation import ugettext_lazy as _
 
@@ -70,7 +70,7 @@ def get_resource_name(context):
             except AttributeError:
                 resource_name = view.__class__.__name__
 
-            if not isinstance(resource_name, six.string_types):
+            if not isinstance(resource_name, str):
                 # The resource name is not a string - return as is
                 return resource_name
 
@@ -286,7 +286,7 @@ def get_included_serializers(serializer):
     included_serializers = copy.copy(
         getattr(serializer, 'included_serializers', dict()))
 
-    for name, value in six.iteritems(included_serializers):
+    for name, value in included_serializers.items():
         if not isinstance(value, type):
             if value == 'self':
                 included_serializers[name] = serializer if isinstance(
@@ -316,7 +316,7 @@ def get_relation_instance(resource_instance, source, serializer):
     return (True, relation_instance)
 
 
-class Hyperlink(six.text_type):
+class Hyperlink(str):
     """
     A string like object that additionally has an associated name.
     We use this for hyperlinked URLs that may render as a named link
@@ -327,7 +327,7 @@ class Hyperlink(six.text_type):
     """
 
     def __new__(self, url, name):
-        ret = six.text_type.__new__(self, url)
+        ret = str.__new__(self, url)
         ret.name = name
         return ret
 
@@ -354,7 +354,7 @@ def format_drf_errors(response, context, exc):
             # see if they passed a dictionary to ValidationError manually
             if isinstance(error, dict):
                 errors.append(error)
-            elif isinstance(error, six.string_types):
+            elif isinstance(error, str):
                 classes = inspect.getmembers(exceptions, inspect.isclass)
                 # DRF sets the `field` to 'detail' for its own exceptions
                 if isinstance(exc, tuple(x[1] for x in classes)):

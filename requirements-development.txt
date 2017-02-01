@@ -1,8 +1,10 @@
 -e .
-pytest>=2.9.0,<3.0
+pytest>3.0
 pytest-django
 pytest-factoryboy
-fake-factory
+faker
 django-filter
 tox
+tox-pyenv
+tox-travis
 mock

@@ -3,7 +3,6 @@ from rest_framework import routers
 
 from example.views import BlogViewSet, EntryViewSet, AuthorViewSet, CommentViewSet, EntryRelationshipView, BlogRelationshipView, \
     CommentRelationshipView, AuthorRelationshipView
-from .api.resources.identity import Identity, GenericIdentity
 
 router = routers.DefaultRouter(trailing_slash=False)
 
@@ -13,20 +12,9 @@ router.register(r'authors', AuthorViewSet)
 router.register(r'comments', CommentViewSet)
 
 # for the old tests
-router.register(r'identities', Identity)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-
-    # old tests
-    url(r'identities/default/(?P<pk>\d+)',
-        GenericIdentity.as_view(), name='user-default'),
-
-
-    url(r'^entries/(?P<entry_pk>[^/.]+)/suggested/',
-        EntryViewSet.as_view({'get': 'list'}),
-        name='entry-suggested'
-        ),
     url(r'^entries/(?P<pk>[^/.]+)/relationships/(?P<related_field>\w+)',
         EntryRelationshipView.as_view(),
         name='entry-relationships'),

@@ -2,21 +2,7 @@
 JSON API and Django Rest Framework
 ====================================
 
-.. image:: https://travis-ci.org/django-json-api/django-rest-framework-json-api.svg?branch=develop
-   :target: https://travis-ci.org/django-json-api/django-rest-framework-json-api
-
-.. image:: https://readthedocs.org/projects/django-rest-framework-json-api/badge/?version=latest
-   :alt: Read the docs
-   :target: http://django-rest-framework-json-api.readthedocs.org/
-
-.. image:: https://codeclimate.com/github/django-json-api/django-rest-framework-json-api/badges/gpa.svg
-   :target: https://codeclimate.com/github/django-json-api/django-rest-framework-json-api
-   :alt: Code Climate
-
-.. image:: https://badges.gitter.im/Join%20Chat.svg
-   :alt: Join the chat at https://gitter.im/django-json-api/django-rest-framework-json-api
-   :target: https://gitter.im/django-json-api/django-rest-framework-json-api
-
+Upstream version
 
 Documentation: http://django-rest-framework-json-api.readthedocs.org/
 
